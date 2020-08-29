@@ -1,0 +1,33 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+#app {
+    width: 100%;
+    height: 100%; 
+}
+html {
+    width: 100%;
+    height: 100%;
+}
+ body {
+    width: 100%;
+    height: 100%;
+}
+.login {
+    width: 100%;
+    height: 100%;
+}
+.loginbox {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.msgbox {
+    width: 500px;
+    height: 400px;
+    background: skyblue;
+}
