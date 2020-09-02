@@ -195,7 +195,6 @@ export default {
             Vue.set(item,"arrow",">")
           })
           console.log("当前用户权限",res.data);
-          
           // 提交mutation
           commit('setroles', res.data);
           //循环

@@ -331,25 +331,25 @@ export default {
       })[0];
       console.log(arr);
       //循环
-      // this.rightss.map((item, index) => {
-      //   if (arr.children) {
-      //     item.children.map((item1, index1) => {
-      //       if (arr.children[index].children) {
-      //         item1.children.map((item2, index2) => {
-      //           // console.log(arr.children[index]);
-      //           if (arr.children[index].children[index1].children) {
-      //             // if (
-      //             //   item2.authName ===
-      //             //   arr.children[index].children[index1].children[index2]
-      //             // ) {
-      //               console.log(item2.authName,index2);
-      //             // }
-      //           }
-      //         });
-      //       }
-      //     });
-      //   }
-      // });
+      this.rightss.map((item, index) => {
+        if (arr.children) {
+          item.children.map((item1, index1) => {
+            if (arr.children[index].children) {
+              item1.children.map((item2, index2) => {
+                console.log(arr.children[index]);
+                if (arr.children[index].children[index1].children) {
+                  // if (
+                  //   item2.authName ===
+                  //   arr.children[index].children[index1].children[index2]
+                  // ) {
+                    console.log(item2.authName,index2);
+                  // }
+                }
+              });
+            }
+          });
+        }
+      });
     },
     handleClose1(done) {
       this.$confirm("确认关闭？")

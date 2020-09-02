@@ -194,19 +194,9 @@ export default {
           res.data.map(item => {
             Vue.set(item,"arrow",">")
           })
-          console.log("当前用户权限",res.data);
-          
+          console.log(res.data);
           // 提交mutation
-          commit('setroles', res.data);
-          //循环
-          // res.data.map(item => {
-          //   item.children.map(item1 => {
-            
-          //     item1.children.map(item2 => {
-                
-          //     })
-          //   })
-          // })
+          commit('setroles', res.data)
         }
       }catch(err){
         console.log(err);
@@ -255,7 +245,8 @@ export default {
               })
             })
           })
-          
+          //寻找下标
+          for(let i=0;i<res.data;)
           console.log(res.data);
           commit('setrights',res.data)  
     }

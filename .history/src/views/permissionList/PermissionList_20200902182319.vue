@@ -4,8 +4,8 @@
   :data="data"
   show-checkbox
   node-key="id"
-  :default-expanded-keys="[2, 3]"
-  :default-checked-keys="[6]"
+  :default-expanded-keys="[1, 3]"
+  :default-checked-keys="[5]"
   :props="defaultProps">
 </el-tree></div>
 </template>

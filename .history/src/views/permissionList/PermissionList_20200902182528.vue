@@ -5,7 +5,7 @@
   show-checkbox
   node-key="id"
   :default-expanded-keys="[2, 3]"
-  :default-checked-keys="[6]"
+  :default-checked-keys="[2]"
   :props="defaultProps">
 </el-tree></div>
 </template>

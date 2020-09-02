@@ -45,104 +45,102 @@
               </template>
             </el-table-column>
           </el-table>
-          <!-- 添加角色 -->
-          <el-dialog
-            title="添加角色"
-            :visible.sync="dialogVisible1"
-            width="30%"
-            :before-close="handleClose1"
-          >
-            <span>
-              <el-form
-                :label-position="labelPosition"
-                label-width="80px"
-                :model="formLabelAlign1"
-                :rules="rules"
-              >
-                <el-form-item label="角色姓名" prop="roleName">
-                  <el-input v-model="formLabelAlign.roleName"></el-input>
-                </el-form-item>
-                <el-form-item label="角色描述" prop="roleDesc">
-                  <el-input type="text" v-model="formLabelAlign.roleDesc"></el-input>
-                </el-form-item>
-              </el-form>
-            </span>
-            <span slot="footer" class="dialog-footer">
-              <el-button @click="dialogVisible1 = false">取 消</el-button>
-              <el-button type="primary" @click="addrole">确 定</el-button>
-            </span>
-          </el-dialog>
-          <!-- 编辑角色 -->
-          <el-dialog
-            title="编辑角色"
-            :visible.sync="dialogVisible"
-            width="30%"
-            :before-close="handleClose1"
-          >
-            <span>
-              <el-form
-                :label-position="labelPosition"
-                label-width="80px"
-                :model="formLabelAlign1"
-                :rules="rules"
-              >
-                <el-form-item label="角色姓名" prop="roleName">
-                  <el-input v-model="formLabelAlign1.roleName"></el-input>
-                </el-form-item>
-                <el-form-item label="角色描述" prop="roleDesc">
-                  <el-input type="text" v-model="formLabelAlign1.roleDesc"></el-input>
-                </el-form-item>
-              </el-form>
-            </span>
-            <span slot="footer" class="dialog-footer">
-              <el-button @click="dialogVisible = false">取 消</el-button>
-              <el-button type="primary" @click="changeorles">确 定</el-button>
-            </span>
-          </el-dialog>
-          <!-- 删除角色 -->
-          <el-dialog
-            title="删除角色"
-            :visible.sync="dialogVisible2"
-            width="30%"
-            :before-close="handleClose1"
-          >
-            <span>
-              <img class="attentonmsg" src="../../../public/image/msg.png" alt />该操作永久删除该信息！确认继续？
-            </span>
-            <span slot="footer" class="dialog-footer">
-              <el-button @click="dialogVisible2 = false">取 消</el-button>
-              <el-button type="primary" @click="deleteorles">确 定</el-button>
-            </span>
-          </el-dialog>
-          <!-- 分配权限 -->
-          <el-dialog
-            title="分配权限"
-            :visible.sync="dialogVisible3"
-            width="60%"
-            :before-close="handleClose"
-          >
-            <span>
-              <el-tree
-                show-checkbox
-                :data="rightss"
-                node-key="id"
-                default-expand-all
-                @node-drag-start="handleDragStart"
-                @node-drag-enter="handleDragEnter"
-                @node-drag-leave="handleDragLeave"
-                @node-drag-over="handleDragOver"
-                @node-drag-end="handleDragEnd"
-                @node-drop="handleDrop"
-                draggable
-                :allow-drop="allowDrop"
-                :allow-drag="allowDrag"
-              ></el-tree>
-            </span>
-            <span slot="footer" class="dialog-footer">
-              <el-button @click="dialogVisible3 = false">取 消</el-button>
-              <el-button type="primary" @click="dialogVisible3 = false">确 定</el-button>
-            </span>
-          </el-dialog>
+            <!-- 添加角色 -->
+            <el-dialog
+              title="添加角色"
+              :visible.sync="dialogVisible1"
+              width="30%"
+              :before-close="handleClose1">
+              <span>
+                <el-form
+                  :label-position="labelPosition"
+                  label-width="80px"
+                  :model="formLabelAlign1"
+                  :rules="rules"
+                >
+                  <el-form-item label="角色姓名" prop="roleName">
+                    <el-input v-model="formLabelAlign.roleName"></el-input>
+                  </el-form-item>
+                  <el-form-item label="角色描述" prop="roleDesc">
+                    <el-input type="text" v-model="formLabelAlign.roleDesc"></el-input>
+                  </el-form-item>
+                </el-form>
+              </span>
+              <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible1 = false">取 消</el-button>
+                <el-button type="primary" @click="addrole">确 定</el-button>
+              </span>
+            </el-dialog>
+            <!-- 编辑角色 -->
+              <el-dialog
+                    title="编辑角色"
+                    :visible.sync="dialogVisible"
+                    width="30%"
+                    :before-close="handleClose1">
+                    <span>
+                      <el-form
+                        :label-position="labelPosition"
+                        label-width="80px"
+                        :model="formLabelAlign1"
+                        :rules="rules"
+                      >
+                        <el-form-item label="角色姓名" prop="roleName">
+                          <el-input v-model="formLabelAlign1.roleName"></el-input>
+                        </el-form-item>
+                        <el-form-item label="角色描述" prop="roleDesc">
+                          <el-input type="text" v-model="formLabelAlign1.roleDesc"></el-input>
+                        </el-form-item>
+                      </el-form>
+                    </span>
+                    <span slot="footer" class="dialog-footer">
+                      <el-button @click="dialogVisible = false">取 消</el-button>
+                      <el-button type="primary" @click="changeorles">确 定</el-button>
+                    </span>
+              </el-dialog>
+              <!-- 删除角色 -->
+              <el-dialog
+                    title="删除角色"
+                    :visible.sync="dialogVisible2"
+                    width="30%"
+                    :before-close="handleClose1"
+                  >
+                    <span>
+                      <img class="attentonmsg" src="../../../public/image/msg.png" alt />该操作永久删除该信息！确认继续？
+                    </span>
+                    <span slot="footer" class="dialog-footer">
+                      <el-button @click="dialogVisible2 = false">取 消</el-button>
+                      <el-button type="primary" @click="deleteorles">确 定</el-button>
+                    </span>
+              </el-dialog>
+              <!-- 分配权限 -->
+              <el-dialog
+                  title="分配权限"
+                  :visible.sync="dialogVisible3"
+                  width="60%"
+                  :before-close="handleClose">
+                  <span>
+                    <el-tree
+
+                    show-checkbox
+                      :data="rightss"
+                      node-key="id"
+                      default-expand-all
+                      @node-drag-start="handleDragStart"
+                      @node-drag-enter="handleDragEnter"
+                      @node-drag-leave="handleDragLeave"
+                      @node-drag-over="handleDragOver"
+                      @node-drag-end="handleDragEnd"
+                      @node-drop="handleDrop"
+                      draggable
+                      :allow-drop="allowDrop"
+                      :allow-drag="allowDrag"
+                    ></el-tree>
+                  </span>
+                  <span slot="footer" class="dialog-footer">
+                    <el-button @click="dialogVisible3 = false">取 消</el-button>
+                    <el-button type="primary" @click="dialogVisible3 = false">确 定</el-button>
+                  </span>
+              </el-dialog>
         </div>
       </div>
     </div>
@@ -165,7 +163,7 @@ export default {
       query: "",
       id: "",
       value: true,
-      type: "tree",
+      type:"tree",
       tableData: [],
       dialogVisible: false,
       dialogVisible1: false,
@@ -326,30 +324,10 @@ export default {
       console.log(index, row);
       this.dialogVisible3 = true;
       //判断选择用户
-      let arr = this.roles.filter(item => {
-        return item.roleName === row.roleName;
-      })[0];
-      console.log(arr);
-      //循环
-      // this.rightss.map((item, index) => {
-      //   if (arr.children) {
-      //     item.children.map((item1, index1) => {
-      //       if (arr.children[index].children) {
-      //         item1.children.map((item2, index2) => {
-      //           // console.log(arr.children[index]);
-      //           if (arr.children[index].children[index1].children) {
-      //             // if (
-      //             //   item2.authName ===
-      //             //   arr.children[index].children[index1].children[index2]
-      //             // ) {
-      //               console.log(item2.authName,index2);
-      //             // }
-      //           }
-      //         });
-      //       }
-      //     });
-      //   }
-      // });
+      this.roles.filter(item=>{
+            return item.roleName===row.roleName
+          });
+          console.log(this.roles);
     },
     handleClose1(done) {
       this.$confirm("确认关闭？")
@@ -405,26 +383,26 @@ export default {
       return draggingNode.data.label.indexOf("三级 3-2-2") === -1;
     },
     //gettights
-    getRights() {
+    getRights(){
       this.getrights({
-        type: this.type
-      });
+        type:this.type
+      })
     }
   },
   mounted() {
     this.getroles();
-    this.getRights();
+    this.getRights()
   },
   watch: {
-    roles: {
-      handler() {
+    roles:{
+      handler(){
         console.log("得到数据");
       },
-      immediate: true
+      immediate:true
     }
   },
   computed: {
-    ...mapState(["roles", "rightss"])
+    ...mapState(["roles","rightss"])
   }
 };
 </script>

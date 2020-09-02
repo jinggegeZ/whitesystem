@@ -12,8 +12,7 @@ export default {
     userList: [],
     total:0,
     reports:[],
-    rightss:[],
-    roles:[]
+    rightss:[]
   },
   mutations: {
     setMenus(state, data) {
@@ -194,19 +193,9 @@ export default {
           res.data.map(item => {
             Vue.set(item,"arrow",">")
           })
-          console.log("当前用户权限",res.data);
-          
+          console.log(res.data);
           // 提交mutation
-          commit('setroles', res.data);
-          //循环
-          // res.data.map(item => {
-          //   item.children.map(item1 => {
-            
-          //     item1.children.map(item2 => {
-                
-          //     })
-          //   })
-          // })
+          commit('setroles', res.data)
         }
       }catch(err){
         console.log(err);
@@ -245,7 +234,6 @@ export default {
           console.log(res.data);
           res.data = JSON.parse(JSON.stringify(res.data))
           
-
           res.data.map(item => {
             Vue.set(item,"label",item.authName);
             item.children.map(item1 => {
@@ -255,7 +243,6 @@ export default {
               })
             })
           })
-          
           console.log(res.data);
           commit('setrights',res.data)  
     }
