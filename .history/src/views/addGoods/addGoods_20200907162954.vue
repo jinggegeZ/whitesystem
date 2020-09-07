@@ -1,0 +1,353 @@
+<template>
+  <div>
+    <el-card class="box-card">
+      <div class="contaner">
+        <div class="leftbox">
+          <div>
+            <div
+              class="itembox"
+              v-for="(item,index) in tablist"
+              :key="index"
+              :class="[activeindex == index ? 'activeclass' : '']"
+              @click="choseindex(index)"
+            >{{item.title}}</div>
+          </div>
+        </div>
+        <div class="rightbox">
+          <!-- 设置商品属性 -->
+          <div class="titlebox">设置商品属性</div>
+          <!-- 步骤条 -->
+          <div>
+            <el-steps :active="activeindex" finish-status="success" align-center>
+              <el-step title="基本信息"></el-step>
+              <el-step title="商品参数"></el-step>
+              <el-step title="商品属性"></el-step>
+              <el-step title="商品照片"></el-step>
+              <el-step title="商品内容"></el-step>
+              <el-step title="完成"></el-step>
+            </el-steps>
+          </div>
+          <!-- 基本信息 -->
+          <div v-if="activeindex === 0">
+            <div class="msgbox1">
+              <el-form
+                :model="ruleForm"
+                :rules="rules"
+                ref="ruleForm"
+                label-width="100px"
+                class="demo-ruleForm"
+              >
+                <el-form-item label="商品名称" prop="goodsname">
+                  <el-input v-model="ruleForm.goodsname"></el-input>
+                </el-form-item>
+                <el-form-item label="商品价格" prop="goodsprice">
+                  <el-input
+                    v-model="ruleForm.goodsprice"
+                    :disabled="ruleForm.goodsname === '' ? true : false"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="商品重量" prop="goodsweight">
+                  <el-input
+                    v-model="ruleForm.goodsweight"
+                    :disabled="ruleForm.goodsprice === '' ? true : false"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="商品数量" prop="goodsnumber">
+                  <el-input
+                    v-model="ruleForm.goodsnumber"
+                    :disabled="ruleForm.goodsweight === '' ? true : false"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="商品分类" prop="goodsclass">
+                  <el-cascader
+                    :options="goodslist"
+                    :props="prop"
+                    v-model="prop.label"
+                    clearable
+                    :disabled="ruleForm.goodsnumber === '' ? true : false"
+                  >
+                    <template slot-scope="{ node, data }">
+                      <span>{{ data.cat_name }}</span>
+                      <span v-if="!node.isLeaf">{{ data.children.cat_name }}</span>
+                    </template>
+                  </el-cascader>
+                </el-form-item>
+              </el-form>
+            </div>
+            <div
+              v-if="ruleForm.goodsname&&ruleForm.goodsprice&&ruleForm.goodsweight&&ruleForm.goodsnumber&&prop.label"
+            >
+              <div>
+                <el-button type="success" @click="gonext(activeindex)">下一步</el-button>
+              </div>
+            </div>
+          </div>
+          <div v-if="activeindex === 1">
+            <div class="nextbox">
+              <el-button type="success" @click="gonext(activeindex)">下一步</el-button>
+            </div>
+          </div>
+          <div v-if="activeindex === 2">
+            <div class="nextbox1">
+              <div class="nbx1-1">暂无属性</div>
+              <div>
+                <el-button type="success" @click="gonext(activeindex)">下一步</el-button>
+              </div>
+            </div>
+          </div>
+          <div v-if="activeindex === 3">
+            <div class="nextbox1">
+              <el-upload
+                class="upload-demo"
+                drag
+                action="https://jsonplaceholder.typicode.com/posts/"
+                multiple
+              >
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">
+                  将文件拖到此处，或
+                  <em>点击上传</em>
+                </div>
+                <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
+              </el-upload>
+              <div class="nbx2-2">
+                <el-button type="success" @click="gonext(activeindex)">下一步</el-button>
+              </div>
+            </div>
+          </div>
+          <div v-if="activeindex === 4">
+            <mavon-editor
+              :toolbars="toolbars"
+              @imgAdd="handleEditorImgAdd"
+              @imgDel="handleEditorImgDel"
+              style="height:600px"
+              v-model="value"
+              @change="change"
+              ref="md"
+            />
+          </div>
+        </div>
+      </div>
+    </el-card>
+  </div>
+</template>
+
+<script>
+import { createNamespacedHelpers } from "vuex";
+const userModule = createNamespacedHelpers("goods");
+const { mapState, mapActions } = userModule;
+export default {
+  name: "addGoods",
+  props: {},
+  components: {},
+  data() {
+    return {
+      type: "",
+      pagenum: "",
+      pagesize: "",
+      activeindex: 0,
+      tablist: [
+        {
+          title: "基本信息",
+          id: "tab-0"
+        },
+        {
+          title: "商品参数",
+          id: "tab-1"
+        },
+        {
+          title: "商品属性",
+          id: "tab-2"
+        },
+        {
+          title: "商品照片",
+          id: "tab-3"
+        },
+        {
+          title: "商品内容",
+          id: "tab-4"
+        }
+      ],
+      ruleForm: {
+        goodsname: "",
+        goodsprice: "",
+        goodsweight: "",
+        goodsnumber: ""
+      },
+      //规则
+      rules: {
+        goodsname: [
+          { required: true, message: "请输入活动名称", trigger: "blur" },
+          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" }
+        ],
+        goodsprice: [
+          { required: true, message: "请输入商品价格", trigger: "blur" },
+          { min: 1, message: "价至少大于1", trigger: "blur" }
+        ],
+        goodsweight: [
+          { required: true, message: "请输入商品重量", trigger: "blur" },
+          { message: "商品重量不能为空", trigger: "blur" }
+        ],
+        goodsnumber: [
+          { required: true, message: "请输入商品数量", trigger: "blur" },
+          { message: "商品数量不能为空", trigger: "blur" }
+        ]
+      },
+      options: [],
+
+      prop: {
+        vallue: "cat_id",
+        label: "cat_name"
+      },
+      //文本解析器
+     toolbars: {
+        bold: true, // 粗体
+        italic: true, // 斜体
+        header: true, // 标题
+        underline: true, // 下划线
+        strikethrough: true, // 中划线
+        mark: true, // 标记
+        superscript: true, // 上角标
+        subscript: true, // 下角标
+        quote: true, // 引用
+        ol: true, // 有序列表
+        ul: true, // 无序列表
+        link: true, // 链接
+        imagelink: true, // 图片链接
+        code: false, // code
+        table: true, // 表格
+        fullscreen: true, // 全屏编辑
+        readmodel: true, // 沉浸式阅读
+        htmlcode: true, // 展示html源码
+        help: true, // 帮助
+        /* 1.3.5 */
+        undo: true, // 上一步
+        redo: true, // 下一步
+        trash: true, // 清空
+        save: true, // 保存（触发events中的save事件）
+        /* 1.4.2 */
+        navigation: true, // 导航目录
+        /* 2.1.8 */
+        alignleft: true, // 左对齐
+        aligncenter: true, // 居中
+        alignright: true, // 右对齐
+        /* 2.2.1 */
+        subfield: true, // 单双栏模式
+        preview: true, // 预览
+      },
+    };
+  },
+  methods: {
+    //展开符运算
+    ...mapActions(["getcategories"]),
+    //选中index
+    choseindex(index) {
+      this.activeindex = index;
+    },
+    //获取goodslist
+    getgoodslist() {
+      this.getcategories({
+        type: this.type,
+        pagenum: this.pagenum,
+        pagesize: this.pagesize
+      });
+    },
+    // 点击下一步
+    gonext(activeindex) {
+      console.log(activeindex);
+      this.activeindex = this.activeindex + 1;
+    },
+       //监听markdown变化
+      change(value, render) {
+      this.html = render;
+      this.blogInfo.blogMdContent = value;
+      this.blogInfo.blogContent = render;
+      },
+      //上传图片接口pos 表示第几个图片 
+      handleEditorImgAdd(pos , $file){
+        var formdata = new FormData();
+        formdata.append('file' , $file);
+         this.$axios
+        .post("http://localhost:8000/blogs/image/upload/", formdata)
+        .then(res => {
+          var url = res.data.data;
+           this.$refs.md.$img2Url(pos, url);  //这里就是引用ref = md 然后调用$img2Url方法即可替换地址
+        });
+      },
+      handleEditorImgDel(){
+      console.log('handleEditorImgDel');    //我这里没做什么操作，后续我要写上接口，从七牛云CDN删除相应的图片
+      }
+  },
+  mounted() {
+    this.getgoodslist();
+  },
+  watch: {},
+  computed: { ...mapState(["goodslist"]) }
+};
+</script>
+
+<style scoped lang='scss'>
+.contaner {
+  display: flex;
+  min-height: 500px;
+  justify-content: space-between;
+}
+.leftbox {
+  font-size: 14px;
+  width: 10%;
+  height: 350px;
+  margin-top: 120px;
+}
+.itembox {
+  height: 50px;
+  border-right: 2px solid rgb(224, 224, 224);
+  line-height: 50px;
+  margin-left: 10px;
+}
+.rightbox {
+  width: 85%;
+}
+.activeclass {
+  color: rgb(64, 158, 255);
+  border-right: 2px solid rgb(64, 158, 255);
+}
+.titlebox {
+  width: 100%;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+  background: rgb(244, 244, 245);
+}
+.msgbox {
+  margin-top: 30px;
+}
+.msgbox1 {
+  width: 100%;
+  margin-top: 20px;
+}
+.openinput {
+  width: 30%;
+  display: flex;
+  align-items: center;
+}
+.nextbox {
+  margin-top: 50px;
+  margin-left: 20px;
+}
+.nextbox1 {
+  margin-top: 40px;
+  margin-left: 20px;
+}
+.nbx1-1 {
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+.nbx2-2 {
+  margin-left: 20px;
+  margin-top: 20px;
+}
+</style>
