@@ -33,6 +33,7 @@ export default {
                     })
                     commit("setgoods",res.data.goods)
                     commit("settotal",res.data.total)
+                    Message.success('获取成功')
                 }
             } catch{
                 err => {

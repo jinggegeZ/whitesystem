@@ -275,8 +275,10 @@ export default {
           rids
         })
         if (res.meta.status === 200) {
+          console.log(res);
           Message.success('更新成功')
-          dispatch('getroles')
+          
+          dispatch('getusers')
         }
       }catch(err){
         console.log(err);

@@ -14,26 +14,27 @@
             <el-table-column type="expand">
               <template slot-scope="props">
                 <div class="cloumnbox2" v-for="item in props.row.children" :key="item.id">
-                  <!-- 一级权限 -->
-                  <div v-if="item.children" class="cloumnbox2-left">
-                    <el-tag type="danger" closable>{{item.authName}}</el-tag>
-                  </div>
-                  <!-- 二级权限 -->
-                  <div v-if="item.children" class="cloumnbox2-right">
-                    <div class="bot" v-for="item1 in item.children" :key="item1.id">
-                      <el-tag type="success" closable>{{item1.authName}}</el-tag>
-                      <!-- 三级权限 -->
-
-                      <div class="bot_a" v-if="item1.children">
-                        <div v-for="item2 in item1.children" :key="item2.id">
-                          <div class="bot-c" v-if="item2">
-                            <el-tag closable>{{item2.authName}}</el-tag>
+                      <!-- 一级权限 -->
+                      <div v-if="item.children" class="cloumnbox2-left">
+                        <el-tag type="danger" closable>{{item.authName}}</el-tag>
+                      </div>
+                      <!-- 二级权限 -->
+                      <div v-if="item.children" class="cloumnbox2-right">
+                        <div class="bot" v-for="item1 in item.children" :key="item1.id">
+                          <el-tag type="success" closable>{{item1.authName}}</el-tag>
+                          <!-- 三级权限 -->
+                        
+                         <div class="bot_a" v-if="item1.children" >
+                            <div v-for="item2 in item1.children" :key="item2.id">
+                              <div class="bot-c" v-if="item2">
+                                <el-tag closable>{{item2.authName}}</el-tag>
+                              </div>
+                            </div>
                           </div>
+                        
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
               </template>
             </el-table-column>
             <!-- 下标 -->
@@ -149,18 +150,26 @@
             <span>
               <el-tree
                 ref="tree"
-                :data="rightss"
                 show-checkbox
+                :data="rightss"
                 @check-change="checkChange"
                 node-key="id"
                 default-expand-all
-                :default-checked-keys="defaultss"
-                :expand-on-click-node="false"
+                :default-checked-keys="defaults"
+                @node-drag-start="handleDragStart"
+                @node-drag-enter="handleDragEnter"
+                @node-drag-leave="handleDragLeave"
+                @node-drag-over="handleDragOver"
+                @node-drag-end="handleDragEnd"
+                @node-drop="handleDrop"
+                draggable
+                :allow-drop="allowDrop"
+                :allow-drag="allowDrag"
               ></el-tree>
             </span>
             <span slot="footer" class="dialog-footer">
               <el-button @click="dialogVisible3 = false">取 消</el-button>
-              <el-button type="primary" @click="changeUserroles">确 定</el-button>
+              <el-button type="primary" @click="changeuserroles">确 定</el-button>
             </span>
           </el-dialog>
         </div>
@@ -184,11 +193,11 @@ export default {
       pagesize: 5,
       query: "",
       id: "",
-      roleId: "",
+      roleId:"",
       value: true,
       type: "tree",
-      checks: [],
-      defaultss:[],
+      defaults: [],
+      defaultss:"",
       arrlist: [],
       tableData: [],
       dialogVisible: false,
@@ -230,17 +239,20 @@ export default {
   methods: {
     //
     checkChange(data) {
-      console.log("节点：", data, this.checks);
-      let len = this.checks.filter(item => {
+      console.log("节点：", data, this.defaults);
+      this.roleId = data.id
+      let len = this.defaults.filter(item => {
         return item === data.id;
       }).length;
       if (len === 0) {
-        this.checks.push(data.id);
+        this.defaults.push(data.id);
       } else {
-        this.checks = this.checks.filter(item => {
+        this.defaults = this.defaults.filter(item => {
           return item !== data.id;
         });
       }
+      this.defaultss = this.defaults.toString
+      console.log(this.defaultss);
     },
     //展开符运算
     ...mapActions([
@@ -297,7 +309,7 @@ export default {
     },
     //点击分配角色dialogVisible3
     handleshare(index, row) {
-      this.roleId = row.id
+      console.log(index, row);
       this.dialogVisible3 = true;
       //判断选择用户
       let arr = this.roles.filter(item => {
@@ -316,7 +328,7 @@ export default {
           });
         });
       });
-      this.defaultss = abb;
+      this.defaults = abb;
     },
     handleClose1(done) {
       this.$confirm("确认关闭？")
@@ -343,8 +355,33 @@ export default {
       return index * 1;
     },
     // 树状图事件部分
-    getRoles(){
-      this.getroles()
+    handleDragStart(node, ev) {
+      console.log("drag start", node, ev);
+    },
+    handleDragEnter(draggingNode, dropNode, ev) {
+      console.log("tree drag enter: ", dropNode.label, ev);
+    },
+    handleDragLeave(draggingNode, dropNode, ev) {
+      console.log("tree drag leave: ", dropNode.label, ev);
+    },
+    handleDragOver(draggingNode, dropNode, ev) {
+      console.log("tree drag over: ", dropNode.label, ev);
+    },
+    handleDragEnd(draggingNode, dropNode, dropType, ev) {
+      console.log("tree drag end: ", dropNode && dropNode.label, dropType, ev);
+    },
+    handleDrop(draggingNode, dropNode, dropType, ev) {
+      console.log("tree drop: ", dropNode.label, dropType, ev);
+    },
+    allowDrop(draggingNode, dropNode, type) {
+      if (dropNode.data.label === "二级 3-1") {
+        return type !== "inner";
+      } else {
+        return true;
+      }
+    },
+    allowDrag(draggingNode) {
+      return draggingNode.data.label.indexOf("三级 3-2-2") === -1;
     },
     //gettights
     getRights() {
@@ -352,17 +389,18 @@ export default {
         type: this.type
       });
     },
-    //点击确定修改信息
-    changeUserroles() {
-      this.dialogVisible3 = false;
+    changeuserroles(){
+      this.dialogVisible3 = false
+      
+      
       this.changeuserroles({
-        roleId: this.roleId,
-        rids: this.checks.join(",")
-      });
+        roleId:this.roleId,
+        rids:this.defaultss
+      })
     }
   },
   mounted() {
-    this.getRoles();
+    this.getroles();
     this.getRights();
   },
   watch: {
@@ -453,15 +491,16 @@ export default {
 .cloumnbox2-right {
   width: 70%;
 }
-.bot {
+.bot{
   margin: 10px 0;
   display: flex;
 }
-.bot_a {
+.bot_a{
   margin-left: 20px;
   display: flex;
 }
-.bot-c {
+.bot-c{
   margin-right: 15px;
 }
+
 </style>

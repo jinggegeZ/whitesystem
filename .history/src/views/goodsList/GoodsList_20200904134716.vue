@@ -3,80 +3,56 @@
     <div class="userListbox">
       <div class="userListbox-serach">
         <div class="userListbox-serach1">
-          <div class="adduser" @click="opendiolog">添加用户</div>
+          <div>
+            <el-input placeholder="请输入内容" v-model="keyword" class="input-with-select">
+              <el-button slot="append" icon="el-icon-search"></el-button>
+            </el-input>
+          </div>
+          <div class="adduser" @click="opendiolog">添加商品</div>
         </div>
       </div>
       <div class="userListbox-nav">
         <!-- 用户表格 -->
         <div class="list_b">
-          <el-table :data="roles" border stripe style="width: 100%">
-            <!-- 展开符 -->
-            <el-table-column type="expand">
-              <template slot-scope="props">
-                <div class="cloumnbox2" v-for="item in props.row.children" :key="item.id">
-                  <!-- 一级权限 -->
-                  <div v-if="item.children" class="cloumnbox2-left">
-                    <el-tag type="danger" closable>{{item.authName}}</el-tag>
-                  </div>
-                  <!-- 二级权限 -->
-                  <div v-if="item.children" class="cloumnbox2-right">
-                    <div class="bot" v-for="item1 in item.children" :key="item1.id">
-                      <el-tag type="success" closable>{{item1.authName}}</el-tag>
-                      <!-- 三级权限 -->
-
-                      <div class="bot_a" v-if="item1.children">
-                        <div v-for="item2 in item1.children" :key="item2.id">
-                          <div class="bot-c" v-if="item2">
-                            <el-tag closable>{{item2.authName}}</el-tag>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </template>
-            </el-table-column>
+          <el-table :data="goods" border stripe style="width: 100%">
             <!-- 下标 -->
             <el-table-column label="#" type="index" :index="indexMethod" align="center"></el-table-column>
             <!-- 姓名 -->
-            <el-table-column prop="roleName" label="姓名" align="center"></el-table-column>
+            <el-table-column prop="goods_name" label="商品名称" align="center" width="800"></el-table-column>
             <!-- 角色 -->
-            <el-table-column prop="roleDesc" label="描述" align="center"></el-table-column>
+            <el-table-column prop="goods_price" label="商品价格" align="center"  width="60"></el-table-column>
+            <!-- 角色 -->
+            <el-table-column prop="goods_weight" label="商品重量" align="center" width="60"></el-table-column>
+            <!-- 角色 -->
+            <el-table-column prop="create_time" label="创建时间" align="center"></el-table-column>
             <!-- 操作 -->
-            <el-table-column label="操作" width="250">
+            <el-table-column label="操作" align="center">
               <template slot-scope="scope">
                 <el-tooltip class="item" effect="dark" content="编辑" placement="top">
                   <el-button
+                    icon="el-icon-edit"
                     size="mini"
                     type="primary"
                     @click="handleEdit(scope.$index, scope.row)"
-                  >编辑</el-button>
+                  ></el-button>
                 </el-tooltip>
                 <el-tooltip class="item" effect="dark" content="删除" placement="top">
                   <el-button
+                    icon="el-icon-delete"
                     size="mini"
                     type="danger"
                     @click="handleDelete(scope.$index, scope.row)"
-                  >删除</el-button>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" content="分配权限" placement="top">
-                  <el-button
-                    size="mini"
-                    type="warning"
-                    @click="handleshare(scope.$index, scope.row)"
-                  >分配权限</el-button>
+                  ></el-button>
                 </el-tooltip>
               </template>
             </el-table-column>
           </el-table>
-
-          <!-- 添加角色 -->
+          <!-- 添加商品 -->
           <el-dialog
-            title="添加角色"
+            title="添加商品"
             :visible.sync="dialogVisible1"
             width="30%"
-            :before-close="handleClose1"
-          >
+            :before-close="handleClose1">
             <span>
               <el-form
                 :label-position="labelPosition"
@@ -97,13 +73,12 @@
               <el-button type="primary" @click="addrole">确 定</el-button>
             </span>
           </el-dialog>
-          <!-- 编辑角色 -->
+          <!-- 编辑商品 -->
           <el-dialog
-            title="编辑角色"
+            title="编辑商品"
             :visible.sync="dialogVisible"
             width="30%"
-            :before-close="handleClose1"
-          >
+            :before-close="handleClose1">
             <span>
               <el-form
                 :label-position="labelPosition"
@@ -124,45 +99,31 @@
               <el-button type="primary" @click="changeorles">确 定</el-button>
             </span>
           </el-dialog>
-          <!-- 删除角色 -->
+          <!-- 删除商品 -->
           <el-dialog
-            title="删除角色"
+            title="删除商品"
             :visible.sync="dialogVisible2"
             width="30%"
-            :before-close="handleClose1"
-          >
+            :before-close="handleClose1">
             <span>
               <img class="attentonmsg" src="../../../public/image/msg.png" alt />该操作永久删除该信息！确认继续？
             </span>
             <span slot="footer" class="dialog-footer">
               <el-button @click="dialogVisible2 = false">取 消</el-button>
-              <el-button type="primary" @click="deleteorles">确 定</el-button>
+              <el-button type="primary" @click="deleteGoods">确 定</el-button>
             </span>
           </el-dialog>
-          <!-- 分配权限 -->
-          <el-dialog
-            title="分配权限"
-            :visible.sync="dialogVisible3"
-            width="50%"
-            :before-close="handleClose"
-          >
-            <span>
-              <el-tree
-                ref="tree"
-                :data="rightss"
-                show-checkbox
-                @check-change="checkChange"
-                node-key="id"
-                default-expand-all
-                :default-checked-keys="defaultss"
-                :expand-on-click-node="false"
-              ></el-tree>
-            </span>
-            <span slot="footer" class="dialog-footer">
-              <el-button @click="dialogVisible3 = false">取 消</el-button>
-              <el-button type="primary" @click="changeUserroles">确 定</el-button>
-            </span>
-          </el-dialog>
+           <div class="fenye">
+            <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page="currentPage"
+              :page-sizes="[20, 40, 80,100]"
+              :page-size="20"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="total"
+            ></el-pagination>
+          </div>
         </div>
       </div>
     </div>
@@ -171,30 +132,29 @@
 
 <script>
 import { createNamespacedHelpers } from "vuex";
-const userModule = createNamespacedHelpers("user");
+const userModule = createNamespacedHelpers("goods");
 const { mapState, mapActions } = userModule;
 export default {
-  name: "UserList",
+  name: "GoodsList",
   props: {},
   components: {},
   data() {
     return {
       keyword: "",
       pagenum: 1,
-      pagesize: 5,
+      pagesize: 20,
       query: "",
+      currentPage:1,
       id: "",
-      roleId: "",
       value: true,
       type: "tree",
-      checks: [],
-      defaultss:[],
+      defaults: [],
       arrlist: [],
       tableData: [],
       dialogVisible: false,
       dialogVisible1: false,
       dialogVisible2: false,
-      dialogVisible3: false,
+      
       labelPosition: "right",
       formLabelAlign: {
         roleName: "",
@@ -230,27 +190,42 @@ export default {
   methods: {
     //
     checkChange(data) {
-      console.log("节点：", data, this.checks);
-      let len = this.checks.filter(item => {
+      console.log("节点：", data, this.defaults);
+      let len = this.defaults.filter(item => {
         return item === data.id;
       }).length;
       if (len === 0) {
-        this.checks.push(data.id);
+        this.defaults.push(data.id);
       } else {
-        this.checks = this.checks.filter(item => {
+        this.defaults = this.defaults.filter(item => {
           return item !== data.id;
         });
       }
+      console.log(this.defaults);
     },
     //展开符运算
     ...mapActions([
-      "getroles",
-      "addroles",
-      "changerolesmsg",
-      "deleterolesUser",
-      "getrights",
-      "changeuserroles"
+      "getgoods",
+      "deletegoods"
     ]),
+      // 分页
+    handleSizeChange(val) {
+      console.log(val);
+      // this.$store.dispatch("user/getusers", {
+      //   pagenum: this.pagenum,
+      //   pagesize: val,
+      //   query: this.query
+      // });
+    },
+    handleCurrentChange(val) {
+      console.log(val);
+      // this.pagenum = val;
+      // this.$store.dispatch("user/getusers", {
+      //   pagenum: val,
+      //   pagesize: this.pagesize,
+      //   query: this.query
+      // });
+    },
     //diolog打开弹框dialogVisible1
     opendiolog() {
       this.dialogVisible1 = true;
@@ -275,7 +250,7 @@ export default {
     //确定编辑dialogVisible
     changeorles() {
       this.dialogVisible = false;
-      this.changerolesmsg({
+      this.deletegoods({
         id: this.id,
         roleName: this.formLabelAlign1.roleName,
         roleDesc: this.formLabelAlign1.roleDesc
@@ -286,38 +261,20 @@ export default {
       console.log(index, row);
       this.dialogVisible2 = true;
       this.id = row.id;
+      
     },
     //确定点击确认删除
-    deleteorles() {
+    deleteGoods() {
       this.dialogVisible2 = false;
       //编辑用户请求
-      this.deleterolesUser({
-        id: this.id
+      this.deletegoods({
+        id: this.id,
+        pagenum:this.pagenum,
+        pagesize:this.pagesize,
+        query:this.query
       });
     },
-    //点击分配角色dialogVisible3
-    handleshare(index, row) {
-      this.roleId = row.id
-      this.dialogVisible3 = true;
-      //判断选择用户
-      let arr = this.roles.filter(item => {
-        return item.roleName === row.roleName;
-      })[0];
-      console.log(arr);
-      this.$nextTick(() => {
-        console.log(this.$refs.tree);
-      });
-      //循环
-      let abb = [];
-      arr.children.map(item => {
-        item.children.map(item1 => {
-          item1.children.map(item2 => {
-            abb.push(item2.id);
-          });
-        });
-      });
-      this.defaultss = abb;
-    },
+   
     handleClose1(done) {
       this.$confirm("确认关闭？")
         .then(() => {
@@ -342,31 +299,20 @@ export default {
     indexMethod(index) {
       return index * 1;
     },
-    // 树状图事件部分
-    getRoles(){
-      this.getroles()
-    },
     //gettights
-    getRights() {
-      this.getrights({
-        type: this.type
-      });
-    },
-    //点击确定修改信息
-    changeUserroles() {
-      this.dialogVisible3 = false;
-      this.changeuserroles({
-        roleId: this.roleId,
-        rids: this.checks.join(",")
+    getDoods() {
+      this.getgoods({
+        pagenum: this.pagenum,
+      pagesize: this.pagesize,
+      query: this.query,
       });
     }
   },
   mounted() {
-    this.getRoles();
-    this.getRights();
+    this.getDoods();
   },
   watch: {
-    roles: {
+    goods: {
       handler() {
         console.log("得到数据");
       },
@@ -374,7 +320,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(["roles", "rightss"])
+    ...mapState(["goods", "total"])
   }
 };
 </script>
@@ -427,41 +373,11 @@ export default {
   color: white;
   font-size: 12px;
   background: rgb(64, 158, 255);
-  margin-left: 10px;
+  margin-left: 30px;
   border-radius: 5px;
 }
 .fenye {
   margin-top: 10px;
   margin-bottom: 10px;
-}
-.attentonmsg {
-  width: 25px;
-  height: 25px;
-}
-.cloumnbox2 {
-  width: 100%;
-  margin: 20px 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px dotted #dddddd;
-}
-.cloumnbox2-left {
-  width: 150px;
-  max-width: 20%;
-}
-.cloumnbox2-right {
-  width: 70%;
-}
-.bot {
-  margin: 10px 0;
-  display: flex;
-}
-.bot_a {
-  margin-left: 20px;
-  display: flex;
-}
-.bot-c {
-  margin-right: 15px;
 }
 </style>

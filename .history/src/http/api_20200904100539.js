@@ -1,5 +1,4 @@
 import service from './index'
-import qs from "qs"
 
 export default {
   //1.登录
@@ -73,7 +72,7 @@ export default {
       return service.get(`rights/${type}`)
     },
     //16.编辑用户权限
-    changeuserroles({ roleId, rids }) {
+    changeuserroles({ roleId, rids }: {roleId: number, rids: number[]}) {
       return service.post(`roles/${roleId}/rights`, qs.stringify({ rids }), {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       });
@@ -81,10 +80,6 @@ export default {
   //17.获取商品
   getgoods({pagenum,pagesize,query}){
     return service.get(`goods?pagenum=${pagenum}&pagesize=${pagesize}&query=${query}`)
-  },
-  //18.删除商品
-  deletegoods({id}){
-    return service.delete(`goods/${id}`)
   }
   
   

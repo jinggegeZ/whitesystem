@@ -206,24 +206,24 @@ export default {
       // 分页
     handleSizeChange(val) {
       console.log(val);
-      this.$store.dispatch("goods/getgoods", {
-        pagenum: this.pagenum,
-        pagesize: val,
-        query: this.query
-      });
+      // this.$store.dispatch("user/getusers", {
+      //   pagenum: this.pagenum,
+      //   pagesize: val,
+      //   query: this.query
+      // });
     },
     handleCurrentChange(val) {
       console.log(val);
-      this.pagenum = val;
-      this.$store.dispatch("goods/getgoods", {
-        pagenum: val,
-        pagesize: this.pagesize,
-        query: this.query
-      });
+      // this.pagenum = val;
+      // this.$store.dispatch("user/getusers", {
+      //   pagenum: val,
+      //   pagesize: this.pagesize,
+      //   query: this.query
+      // });
     },
     //diolog前往addgoods
     addGoods() {
-      this.$router.push("addGoods")
+      this.$router.push("/addGoods")
     },
     //点击编辑dialogVisible
     handleEdit(index, row) {

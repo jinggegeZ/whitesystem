@@ -151,10 +151,9 @@
                 ref="tree"
                 :data="rightss"
                 show-checkbox
-                @check-change="checkChange"
+                @checkChange="checkChange"
                 node-key="id"
                 default-expand-all
-                :default-checked-keys="defaultss"
                 :expand-on-click-node="false"
               ></el-tree>
             </span>
@@ -187,8 +186,7 @@ export default {
       roleId: "",
       value: true,
       type: "tree",
-      checks: [],
-      defaultss:[],
+      defaults: [],
       arrlist: [],
       tableData: [],
       dialogVisible: false,
@@ -230,14 +228,16 @@ export default {
   methods: {
     //
     checkChange(data) {
-      console.log("节点：", data, this.checks);
-      let len = this.checks.filter(item => {
+      console.log("节点：", data, this.defaults);
+      this.roleId = data.id;
+
+      let len = this.defaults.filter(item => {
         return item === data.id;
       }).length;
       if (len === 0) {
-        this.checks.push(data.id);
+        this.defaults.push(data.id);
       } else {
-        this.checks = this.checks.filter(item => {
+        this.defaults = this.defaults.filter(item => {
           return item !== data.id;
         });
       }
@@ -297,6 +297,7 @@ export default {
     },
     //点击分配角色dialogVisible3
     handleshare(index, row) {
+      console.log(index, row);
       this.roleId = row.id
       this.dialogVisible3 = true;
       //判断选择用户
@@ -316,7 +317,7 @@ export default {
           });
         });
       });
-      this.defaultss = abb;
+      this.defaults = abb;
     },
     handleClose1(done) {
       this.$confirm("确认关闭？")
@@ -343,26 +344,25 @@ export default {
       return index * 1;
     },
     // 树状图事件部分
-    getRoles(){
-      this.getroles()
-    },
+
     //gettights
     getRights() {
       this.getrights({
         type: this.type
       });
     },
-    //点击确定修改信息
     changeUserroles() {
       this.dialogVisible3 = false;
+      console.log(this.roleId);
+      console.log(this.defaults);
       this.changeuserroles({
         roleId: this.roleId,
-        rids: this.checks.join(",")
+        rids: this.defaults.join(",")
       });
     }
   },
   mounted() {
-    this.getRoles();
+    this.getroles();
     this.getRights();
   },
   watch: {

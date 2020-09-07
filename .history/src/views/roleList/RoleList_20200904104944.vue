@@ -14,26 +14,27 @@
             <el-table-column type="expand">
               <template slot-scope="props">
                 <div class="cloumnbox2" v-for="item in props.row.children" :key="item.id">
-                  <!-- 一级权限 -->
-                  <div v-if="item.children" class="cloumnbox2-left">
-                    <el-tag type="danger" closable>{{item.authName}}</el-tag>
-                  </div>
-                  <!-- 二级权限 -->
-                  <div v-if="item.children" class="cloumnbox2-right">
-                    <div class="bot" v-for="item1 in item.children" :key="item1.id">
-                      <el-tag type="success" closable>{{item1.authName}}</el-tag>
-                      <!-- 三级权限 -->
-
-                      <div class="bot_a" v-if="item1.children">
-                        <div v-for="item2 in item1.children" :key="item2.id">
-                          <div class="bot-c" v-if="item2">
-                            <el-tag closable>{{item2.authName}}</el-tag>
+                      <!-- 一级权限 -->
+                      <div v-if="item.children" class="cloumnbox2-left">
+                        <el-tag type="danger" closable>{{item.authName}}</el-tag>
+                      </div>
+                      <!-- 二级权限 -->
+                      <div v-if="item.children" class="cloumnbox2-right">
+                        <div class="bot" v-for="item1 in item.children" :key="item1.id">
+                          <el-tag type="success" closable>{{item1.authName}}</el-tag>
+                          <!-- 三级权限 -->
+                        
+                         <div class="bot_a" v-if="item1.children" >
+                            <div v-for="item2 in item1.children" :key="item2.id">
+                              <div class="bot-c" v-if="item2">
+                                <el-tag closable>{{item2.authName}}</el-tag>
+                              </div>
+                            </div>
                           </div>
+                        
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
               </template>
             </el-table-column>
             <!-- 下标 -->
@@ -148,15 +149,15 @@
           >
             <span>
               <el-tree
-                ref="tree"
-                :data="rightss"
-                show-checkbox
-                @check-change="checkChange"
-                node-key="id"
-                default-expand-all
-                :default-checked-keys="defaultss"
-                :expand-on-click-node="false"
-              ></el-tree>
+              ref="tree"
+      :data="rightss"
+      show-checkbox
+       @checkChange="checkChange"
+      node-key="id"
+      default-expand-all
+      :expand-on-click-node="false"
+      :render-content="renderContent">
+    </el-tree>
             </span>
             <span slot="footer" class="dialog-footer">
               <el-button @click="dialogVisible3 = false">取 消</el-button>
@@ -184,11 +185,10 @@ export default {
       pagesize: 5,
       query: "",
       id: "",
-      roleId: "",
+      roleId:"",
       value: true,
       type: "tree",
-      checks: [],
-      defaultss:[],
+      defaults: [],
       arrlist: [],
       tableData: [],
       dialogVisible: false,
@@ -230,14 +230,16 @@ export default {
   methods: {
     //
     checkChange(data) {
-      console.log("节点：", data, this.checks);
-      let len = this.checks.filter(item => {
+      console.log("节点：", data, this.defaults);
+      this.roleId = data.id
+      
+      let len = this.defaults.filter(item => {
         return item === data.id;
       }).length;
       if (len === 0) {
-        this.checks.push(data.id);
+        this.defaults.push(data.id);
       } else {
-        this.checks = this.checks.filter(item => {
+        this.defaults = this.defaults.filter(item => {
           return item !== data.id;
         });
       }
@@ -297,7 +299,7 @@ export default {
     },
     //点击分配角色dialogVisible3
     handleshare(index, row) {
-      this.roleId = row.id
+      console.log(index, row);
       this.dialogVisible3 = true;
       //判断选择用户
       let arr = this.roles.filter(item => {
@@ -316,7 +318,7 @@ export default {
           });
         });
       });
-      this.defaultss = abb;
+      this.defaults = abb;
     },
     handleClose1(done) {
       this.$confirm("确认关闭？")
@@ -343,26 +345,25 @@ export default {
       return index * 1;
     },
     // 树状图事件部分
-    getRoles(){
-      this.getroles()
-    },
+   
     //gettights
     getRights() {
       this.getrights({
         type: this.type
       });
     },
-    //点击确定修改信息
-    changeUserroles() {
-      this.dialogVisible3 = false;
+    changeUserroles(){
+      this.dialogVisible3 = false
+      console.log(this.roleId);
+      console.log(this.defaultss);
       this.changeuserroles({
-        roleId: this.roleId,
-        rids: this.checks.join(",")
-      });
+        roleId:this.roleId,
+        rids:this.defaults.join(',')
+      })
     }
   },
   mounted() {
-    this.getRoles();
+    this.getroles();
     this.getRights();
   },
   watch: {
@@ -453,15 +454,16 @@ export default {
 .cloumnbox2-right {
   width: 70%;
 }
-.bot {
+.bot{
   margin: 10px 0;
   display: flex;
 }
-.bot_a {
+.bot_a{
   margin-left: 20px;
   display: flex;
 }
-.bot-c {
+.bot-c{
   margin-right: 15px;
 }
+
 </style>

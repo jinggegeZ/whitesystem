@@ -268,18 +268,13 @@ export default {
     },
     //修改用户权限
     async changeuserroles({ dispatch }, { roleId, rids}) {
-     
-      try{
-        let res = await api.changeuserroles({
-          roleId,
-          rids
-        })
-        if (res.meta.status === 200) {
-          Message.success('更新成功')
-          dispatch('getroles')
-        }
-      }catch(err){
-        console.log(err);
+      let res = await api.changeuserroles({
+        roleId,
+        rids
+      })
+      if (res.meta.status === 200) {
+        Message.success('更新成功')
+        dispatch('getusers')
       }
     },
   },

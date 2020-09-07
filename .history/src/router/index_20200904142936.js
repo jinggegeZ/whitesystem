@@ -19,6 +19,7 @@ const routes = [
         name:"Home",
         component:Home
       },
+      
     ]
     
   },
@@ -60,7 +61,6 @@ const routes = [
           title: '角色列表',
           icon: "el-icon-setting"
         }
-        
       },
       {
         path: 'rights',
@@ -89,7 +89,7 @@ const routes = [
         meta: {
           title: '商品列表',
           icon: 'el-icon-help'
-        },
+        }
       },
       {
         path: 'params',
@@ -115,7 +115,6 @@ const routes = [
         component: () => import('../views/addGoods/addGoods.vue'),
         
       },
-      
     ]
   },
   //订单管理

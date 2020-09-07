@@ -3,7 +3,12 @@
     <div class="userListbox">
       <div class="userListbox-serach">
         <div class="userListbox-serach1">
-          <div class="adduser" @click="opendiolog">添加分类</div>
+          <div>
+            <el-input placeholder="请输入内容" v-model="keyword" class="input-with-select">
+              <el-button slot="append" icon="el-icon-search"></el-button>
+            </el-input>
+          </div>
+          <div class="adduser" @click="opendiolog">添加用户</div>
         </div>
       </div>
       <div class="userListbox-nav">
@@ -27,7 +32,7 @@
               </template>
             </el-table-column>
             <!-- 操作 -->
-            <el-table-column label="操作" align="center">
+            <el-table-column label="操作" width="200">
               <template slot-scope="scope">
                 <el-tooltip class="item" effect="dark" content="编辑角色" placement="top">
                   <el-button
@@ -45,6 +50,15 @@
                     @click="handleDelete(scope.$index, scope.row)"
                   ></el-button>
                 </el-tooltip>
+                <el-tooltip class="item" effect="dark" content="分配角色" placement="top">
+                  <el-button
+                    size="mini"
+                    type="warning"
+                    icon="el-icon-setting"
+                    @click="handleshare(scope.$index, scope.row)"
+                  ></el-button>
+                </el-tooltip>
+                
               </template>
             </el-table-column>
           </el-table>
@@ -60,9 +74,9 @@
               :total="total"
             ></el-pagination>
           </div>
-          <!-- 添加分类 -->
+          <!-- 添加用户 -->
           <el-dialog
-            title="添加分类"
+            title="添加用户"
             :visible.sync="dialogVisible1"
             width="30%"
             :before-close="handleClose1">
@@ -116,7 +130,18 @@
               <el-button type="primary" @click="changemsg">确 定</el-button>
             </span>
           </el-dialog>
-       
+          <!-- 分配角色 -->
+          <el-dialog
+              title="分配角色"
+              :visible.sync="dialogVisible2"
+              width="30%"
+              :before-close="handleClose">
+              <span>123</span>
+              <span slot="footer" class="dialog-footer">
+              <el-button @click="dialogVisible2 = false">取 消</el-button>
+              <el-button type="primary" @click="dialogVisible2 = false">确 定</el-button>
+              </span>
+          </el-dialog>
           <!-- 删除角色 -->
           <el-dialog
               title="删除角色"
@@ -157,7 +182,7 @@ export default {
       tableData: [],
       dialogVisible: false,
       dialogVisible1: false,
-     
+      dialogVisible2: false,
       dialogVisible3: false,
       labelPosition: "right",
       formLabelAlign: {
@@ -278,6 +303,11 @@ export default {
         pagesize: this.pagesize,
         query: this.query
       });
+    },
+    //分配角色
+    handleshare(index, row) {
+      console.log(index, row);
+      this.dialogVisible2 = true;
     },
     //修改状态
     change(e) {

@@ -1,5 +1,4 @@
 import service from './index'
-import qs from "qs"
 
 export default {
   //1.登录
@@ -81,10 +80,6 @@ export default {
   //17.获取商品
   getgoods({pagenum,pagesize,query}){
     return service.get(`goods?pagenum=${pagenum}&pagesize=${pagesize}&query=${query}`)
-  },
-  //18.删除商品
-  deletegoods({id}){
-    return service.delete(`goods/${id}`)
   }
   
   

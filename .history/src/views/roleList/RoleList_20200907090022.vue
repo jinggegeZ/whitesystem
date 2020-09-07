@@ -187,7 +187,7 @@ export default {
       roleId: "",
       value: true,
       type: "tree",
-      checks: [],
+      defaults: [],
       defaultss:[],
       arrlist: [],
       tableData: [],
@@ -230,14 +230,15 @@ export default {
   methods: {
     //
     checkChange(data) {
-      console.log("节点：", data, this.checks);
-      let len = this.checks.filter(item => {
+      console.log(data);
+      console.log("节点：", data, this.defaults);
+      let len = this.defaults.filter(item => {
         return item === data.id;
       }).length;
       if (len === 0) {
-        this.checks.push(data.id);
+        this.defaults.push(data.id);
       } else {
-        this.checks = this.checks.filter(item => {
+        this.defaults = this.defaults.filter(item => {
           return item !== data.id;
         });
       }
@@ -352,12 +353,11 @@ export default {
         type: this.type
       });
     },
-    //点击确定修改信息
     changeUserroles() {
       this.dialogVisible3 = false;
       this.changeuserroles({
         roleId: this.roleId,
-        rids: this.checks.join(",")
+        rids: this.defaults.join(",")
       });
     }
   },

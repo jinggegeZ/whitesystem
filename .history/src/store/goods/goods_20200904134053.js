@@ -33,14 +33,16 @@ export default {
                     })
                     commit("setgoods",res.data.goods)
                     commit("settotal",res.data.total)
+                    Message.success('获取成功')
                 }
             } catch{
                 err => {
                     console.log(err);
                 }
             }
-        },
-        //删除商品
+        }
+    },
+    //删除商品
     async deletegoods({dispatch},{id,query, pagenum, pagesize}) {
         let res = await api.deletegoods({id})
         try{
@@ -55,6 +57,4 @@ export default {
             console.log(err);
         }
     }
-    },
-    
 }

@@ -14,7 +14,7 @@ export default {
     return service.get('menus')
   },
   //3.获取用户列表
-  getusers({pagenum,pagesize,query}){
+  getusers({pagenum,pagesize,query}){s
     return service.get(`users?pagenum=${pagenum}&pagesize=${pagesize}&query=${query}`)
   },
   //4.删除用户
@@ -81,10 +81,6 @@ export default {
   //17.获取商品
   getgoods({pagenum,pagesize,query}){
     return service.get(`goods?pagenum=${pagenum}&pagesize=${pagesize}&query=${query}`)
-  },
-  //18.删除商品
-  deletegoods({id}){
-    return service.delete(`goods/${id}`)
   }
   
   

@@ -223,7 +223,7 @@ export default {
     },
     //diolog前往addgoods
     addGoods() {
-      this.$router.push("addGoods")
+      this.$router.push("/addGoods")
     },
     //点击编辑dialogVisible
     handleEdit(index, row) {

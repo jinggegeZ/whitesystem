@@ -19,6 +19,7 @@ const routes = [
         name:"Home",
         component:Home
       },
+      
     ]
     
   },
@@ -60,7 +61,6 @@ const routes = [
           title: '角色列表',
           icon: "el-icon-setting"
         }
-        
       },
       {
         path: 'rights',
@@ -90,6 +90,14 @@ const routes = [
           title: '商品列表',
           icon: 'el-icon-help'
         },
+        children:[
+          {
+            path: 'addGoods',
+            name: 'addGoods',
+            component: () => import('../views/addGoods/addGoods.vue'),
+            
+          },
+        ]
       },
       {
         path: 'params',
@@ -108,12 +116,6 @@ const routes = [
           title: '商品分类',
           icon: 'el-icon-date'
         }
-      },
-      {
-        path: 'addGoods',
-        name: 'addGoods',
-        component: () => import('../views/addGoods/addGoods.vue'),
-        
       },
       
     ]
